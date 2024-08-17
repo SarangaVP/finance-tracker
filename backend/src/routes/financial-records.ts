@@ -25,6 +25,7 @@ router.post("/", async (req: Request, res: Response) => {
     res.status(200).send(savedRecord);
   } catch (err) {
     res.status(500).send(err);
+    console.log(err)
   }
 });
 

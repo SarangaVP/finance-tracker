@@ -13,23 +13,36 @@ export interface FinancialRecord {
 
 interface FinancialRecordsContextType {
     records: FinancialRecord[];
+    addRecord: (record: FinancialRecord) => void;
 }
 
-export const FinancialRecordsProvider = ({
-    children,
-  }: {
-    children: React.ReactNode;
-  }) => {
+export const FinancialRecordsProvider = ({children,}: {children: React.ReactNode;}) => {
     const [records, setRecords] = useState<FinancialRecord[]>([]);
     const { user } = useUser();
-  
+
+    const addRecord = async (record: FinancialRecord) => {
+        const response = await fetch("http://localhost:8010/financial-records", {
+          method: "POST",
+          body: JSON.stringify(record),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
     
+        try {
+          if (response.ok) {
+            const newRecord = await response.json();
+            setRecords((prev) => [...prev, newRecord]);
+          }
+        } catch (err) {}
+      };
+     
     return (
-      <FinancialRecordsContext.Provider value={{records}}>
+      <FinancialRecordsContext.Provider value={{records, addRecord}}>
         {children}
       </FinancialRecordsContext.Provider>
     );
-  };
+};
 
 export const FinancialRecordsContext = createContext<FinancialRecordsContextType | undefined>(undefined);
 
@@ -40,4 +53,4 @@ export const useFinancialRecords = () => {
       throw new Error("useFinancialRecords must be used within a FinancialRecordsProvider");
     }
     return context;
-  };
+};

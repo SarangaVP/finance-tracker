@@ -50,7 +50,7 @@ export const FinancialRecordList = () => {
     const {records, updateRecord} = useFinancialRecords();
 
     const updateCellRecord = (rowIndex: number, columnId: string, value: any) => {
-        const id = records[rowIndex]?.id;
+        const id = records[rowIndex]?._id;
         updateRecord(id ?? "", { ...records[rowIndex], [columnId]: value });
       };
 

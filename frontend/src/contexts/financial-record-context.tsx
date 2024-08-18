@@ -2,7 +2,7 @@ import { useUser } from "@clerk/clerk-react";
 import { createContext, useContext, useEffect, useState } from "react";
 
 export interface FinancialRecord {
-    id?: string;
+    _id?: string;
     userId: string;
     date: Date;
     description: string;
@@ -74,7 +74,7 @@ export const FinancialRecordsProvider = ({children,}: {children: React.ReactNode
           const newRecord = await response.json();
           setRecords((prev) =>
             prev.map((record) => {
-              if (record.id === id) {
+              if (record._id === id) {
                 return newRecord;
               } else {
                 return record;

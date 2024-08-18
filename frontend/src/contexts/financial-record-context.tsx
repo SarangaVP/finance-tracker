@@ -14,6 +14,7 @@ export interface FinancialRecord {
 interface FinancialRecordsContextType {
     records: FinancialRecord[];
     addRecord: (record: FinancialRecord) => void;
+    updateRecord: (id: string, newRecord: FinancialRecord) => void;
 }
 
 export const FinancialRecordsProvider = ({children,}: {children: React.ReactNode;}) => {
@@ -54,10 +55,38 @@ export const FinancialRecordsProvider = ({children,}: {children: React.ReactNode
         } catch (err) {
             console.log(err);
         }
-      };
+    };
+
+    const updateRecord = async (id: string, newRecord: FinancialRecord) => {
+      const response = await fetch(
+        `http://localhost:8010/financial-records/${id}`,
+        {
+          method: "PUT",
+          body: JSON.stringify(newRecord),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+  
+      try {
+        if (response.ok) {
+          const newRecord = await response.json();
+          setRecords((prev) =>
+            prev.map((record) => {
+              if (record.id === id) {
+                return newRecord;
+              } else {
+                return record;
+              }
+            })
+          );
+        }
+      } catch (err) {}
+    };
      
     return (
-      <FinancialRecordsContext.Provider value={{records, addRecord}}>
+      <FinancialRecordsContext.Provider value={{records, addRecord, updateRecord}}>
         {children}
       </FinancialRecordsContext.Provider>
     );

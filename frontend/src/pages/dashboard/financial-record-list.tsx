@@ -47,7 +47,7 @@ const EditableCell: React.FC<EditableCellProps> = ({
 
 
 export const FinancialRecordList = () => {
-    const {records, updateRecord} = useFinancialRecords();
+    const {records, updateRecord, deleteRecord} = useFinancialRecords();
 
     const updateCellRecord = (rowIndex: number, columnId: string, value: any) => {
         const id = records[rowIndex]?._id;
@@ -110,6 +110,18 @@ export const FinancialRecordList = () => {
               />
             ),
           },
+          {
+            Header: "Delete",
+            id: "delete",
+            Cell: ({ row }) => (
+              <button
+                onClick={() => deleteRecord(row.original._id ?? "")}
+                className="button"
+              >
+                Delete
+              </button>
+            ),
+          }
         ],
         [records]
       );
